@@ -1,0 +1,8 @@
+.*
+!.gitignore
+!.clang-format
+
+build/
+
+
+*.code-workspace
