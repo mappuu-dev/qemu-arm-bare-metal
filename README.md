@@ -36,7 +36,7 @@ src/
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd hello_embedded
+   cd qemu-arm-bare-metal
    ```
 
 2. Create a build directory and configure the project:
