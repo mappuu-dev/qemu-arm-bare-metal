@@ -41,8 +41,10 @@ src/
 
 2. Create a build directory and configure the project:
    ```bash
-   cmake -S . -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE="toolchain_arm.cmake"
+   cmake -S . -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE="toolchain_arm.cmake" -DTARGET_MACHINE="<target machine>"
    ```
+   
+   `<target machine>` is same as qemu's -M options.
 
 3. Build the project:
    ```bash
