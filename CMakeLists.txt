@@ -8,15 +8,24 @@ add_executable(${PROJECT_NAME}.elf
     src/uart.c
 )
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcpu=arm926ej-s -ffreestanding -g")
-set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -mcpu=arm926ej-s -g")
+if(TARGET_MACHINE STREQUAL "vexpress-a9")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcpu=cortex-a9 -DCONFIG_VEXPRESS_A9")
+    set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -mcpu=cortex-a9")
+    target_link_options(${PROJECT_NAME}.elf PRIVATE -T${CMAKE_SOURCE_DIR}/linker/arm_vexpress_a9.ld)
+else()
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcpu=arm926ej-s -DCONFIG_VERSATILEPB")
+    set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -mcpu=arm926ej-s")
+    target_link_options(${PROJECT_NAME}.elf PRIVATE -T${CMAKE_SOURCE_DIR}/linker/arm_versatilepb.ld)
+endif()
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffreestanding -g")
+set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -g")
 
 target_link_options(${PROJECT_NAME}.elf PRIVATE
-    -T${CMAKE_SOURCE_DIR}/linker/arm_versatilepb.ld
     -nostartfiles
     -lc
 )
 
 add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
-    COMMAND arm-none-eabi-objcopy -O binary baremetal.elf baremetal.bin
+    COMMAND ${CMAKE_OBJCOPY} -O binary ${PROJECT_NAME}.elf ${PROJECT_NAME}.bin
 )
